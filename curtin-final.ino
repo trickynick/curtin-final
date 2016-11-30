@@ -138,13 +138,13 @@ void loop()
   // "this is looking for the value"
   detectKnock();
 
-  if(knockfound)
+  if (knockfound)
   {
     Serial.println("MAIN KNOCK");
     Serial.print("close pin: ");
-    Serial.println(digitalRead(closepin)?"HIGH":"LOW");
+    Serial.println(digitalRead(closepin) ? "HIGH" : "LOW");
     Serial.print("open pin: ");
-    Serial.println(digitalRead(openpin)?"HIGH":"LOW");
+    Serial.println(digitalRead(openpin) ? "HIGH" : "LOW");
   }
 
   // LOW is closed
@@ -204,8 +204,8 @@ void loop()
   //  }
 
   delay(50);
-//  detectKnock();
-//  detectKnock();
+  //  detectKnock();
+  //  detectKnock();
 
 }
 
