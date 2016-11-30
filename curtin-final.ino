@@ -208,11 +208,11 @@ void loop()
 
     if (digitalRead(openpin) == HIGH && digitalRead(closepin) == HIGH && knockfound)
     {
-      while (digitalRead(closepin) == HIGH)
+      while (digitalRead(openpin) == HIGH)
       {
-        closecurtins(15); // was 5680
+        opencurtins(15); // was 5680
       }
-      closecurtins(15);
+      opencurtins(15);
       detectKnock();
       detectKnock();
       thinkOpen = 1;
