@@ -12,9 +12,10 @@ const int motorlockpin = 11;
 int sensorPin = A0;
 int x, y, z;
 int xp, yp, zp;
-int dx, dy, dz;
+int dx, dy, dz, dsensor;
 int knockfound; // this will have a 0 if nothing, and a 1 if we found a knock
 int threshold = 20; // how sensative the knock sensor is. lower is more sensative
+int bulbBoardThreshold = 100; // how sensative the light builb board.  normal swings are values 4-6 to 670-669 to XXX FIXME
 int sensorValue = 0;
 int lastsensorValue = 0;
 
@@ -66,9 +67,7 @@ void closecurtins(int count)
     digitalWrite(motorlockpin, LOW);
   }
 }
-// int x,y,z;
-/// int xp,yp,zp;
-// int dx,dy,dz;
+
 
 // This function does 3 analog reads on the knock sensor and calculates the difference
 // global variable knockfound is set when detected
@@ -83,9 +82,15 @@ void detectKnock()
   dx = x - xp;
   dy = y - yp;
   dz = z - zp;
+  dsensor = sensorValue - lastsensorValue;
   // Note: at this point all calculations are correct
 
-  if (sensorValue != lastsensorValue || abs(dx) > threshold || abs(dy) > threshold || abs(dz) > threshold )
+  Serial.print("Sensor ");
+  Serial.println(sensorValue);
+  Serial.print("last sen value ");
+  Serial.println(lastsensorValue);
+
+  if (abs(dsensor) > bulbBoardThreshold || abs(dx) > threshold || abs(dy) > threshold || abs(dz) > threshold )
   {
     Serial.print("detect  ");
     Serial.print(dx);
@@ -107,6 +112,9 @@ void detectKnock()
   xp = x;
   yp = y;
   zp = z;
+
+  // sensor
+  lastsensorValue = sensorValue;
 }
 //if (sensorValue != lastsensorValue)
 //{
@@ -130,6 +138,15 @@ void loop()
   // "this is looking for the value"
   detectKnock();
 
+  if(knockfound)
+  {
+    Serial.println("MAIN KNOCK");
+    Serial.print("close pin: ");
+    Serial.println(digitalRead(closepin)?"HIGH":"LOW");
+    Serial.print("open pin: ");
+    Serial.println(digitalRead(openpin)?"HIGH":"LOW");
+  }
+
   // LOW is closed
 
   // "knockfound actually makes it do something"
@@ -141,7 +158,7 @@ void loop()
       opencurtins(15); // was 5680
       Serial.print("o");
     }
-    Serial.println("pened");
+    Serial.println("ooooooooooopened");
 
     // at this poing we always know there will be another detection
     // burn value
@@ -151,7 +168,7 @@ void loop()
     detectKnock();
   }
 
-  
+
   // delay(200);
   if (digitalRead (openpin) == LOW && knockfound)
   {
@@ -161,30 +178,34 @@ void loop()
       closecurtins(15); // was 5680
       Serial.print("c");
     }
-    Serial.println("losed");
-  detectKnock();
-  detectKnock();
-  detectKnock();
-  detectKnock();
+    Serial.println("ccccccccccclosed");
+    detectKnock();
+    detectKnock();
+    detectKnock();
+    detectKnock();
   }
   //while (closepin == HIGH);
   // at this poing we always know there will be another detection
   // burn value
-  
 
-//  if (digitalRead(openpin) == HIGH && digitalRead(closepin) == HIGH && knockfound)
-//  {
-//    while (digitalRead(closepin) == HIGH)
-//    {
-//      closecurtins(15); // was 5680
-//    }
-//    detectKnock();
-//    detectKnock();
-//
-//    //closecurtins(1000); // was 5690
-//    // delay before next reading:
-//    //delay(100);
-//  }
+
+  //  if (digitalRead(openpin) == HIGH && digitalRead(closepin) == HIGH && knockfound)
+  //  {
+  //    while (digitalRead(closepin) == HIGH)
+  //    {
+  //      closecurtins(15); // was 5680
+  //    }
+  //    detectKnock();
+  //    detectKnock();
+  //
+  //    //closecurtins(1000); // was 5690
+  //    // delay before next reading:
+  //    //delay(100);
+  //  }
+
+  delay(50);
+//  detectKnock();
+//  detectKnock();
 
 }
 
