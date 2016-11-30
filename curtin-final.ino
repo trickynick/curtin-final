@@ -90,7 +90,7 @@ void detectKnock()
   Serial.print("last sen value ");
   Serial.println(lastsensorValue);
 
-  if (abs(dsensor) > bulbBoardThreshold || abs(dx) > threshold || abs(dy) > threshold || abs(dz) > threshold )
+  if ( (abs(dsensor) > bulbBoardThreshold) || (abs(dx) > threshold) || (abs(dy) > threshold) || (abs(dz) > threshold) )
   {
     Serial.print("detect  ");
     Serial.print(dx);
@@ -165,8 +165,6 @@ void loop()
     // burn value
     detectKnock();
     detectKnock();
-    detectKnock();
-    detectKnock();
   }
 
 
@@ -182,8 +180,6 @@ void loop()
     closecurtins(15);
 
     Serial.println("ccccccccccclosed");
-    detectKnock();
-    detectKnock();
     detectKnock();
     detectKnock();
   }
