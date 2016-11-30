@@ -19,6 +19,7 @@ int bulbBoardThreshold = 100; // how sensative the light builb board.  normal sw
 int sensorValue = 0;
 int lastsensorValue = 0;
 bool thinkOpen = 0;
+int maxRunSteps = 420; // typcial close is 330
 
 void setup()
 {
@@ -144,6 +145,7 @@ void detectKnock()
 
 void loop()
 {
+  int i = 0;
   sensorValue = analogRead(sensorPin);
 
   //float voltage = sensorValue * (3.3 / 1023.0);
@@ -170,12 +172,14 @@ void loop()
   if (digitalRead(closepin) == LOW && knockfound)
   {
     Serial.println("closepin is closed and knockfound");
-    while (digitalRead(openpin) == HIGH)
+    for(i = 0; i < maxRunSteps && digitalRead(openpin) == HIGH; i++)
     {
-      opencurtins(15); // was 5680
+      opencurtins(15);
       Serial.print("c");
     }
     opencurtins(15);
+    Serial.print("closed for");
+    Serial.println(i);
     Serial.println("ccccclosed");
     thinkOpen = 0;
 
@@ -190,9 +194,9 @@ void loop()
   if (digitalRead (openpin) == LOW && knockfound)
   {
     Serial.println("openpin is touching and knockfound");
-    while (digitalRead(closepin) == HIGH)
+    for(i = 0; i < maxRunSteps && digitalRead(closepin) == HIGH; i++)
     {
-      closecurtins(15); // was 5680
+      closecurtins(15);
       Serial.print("o");
     }
     closecurtins(15);
@@ -208,18 +212,16 @@ void loop()
 
     if (digitalRead(openpin) == HIGH && digitalRead(closepin) == HIGH && knockfound)
     {
-      while (digitalRead(openpin) == HIGH)
+      for(i = 0; i < maxRunSteps && digitalRead(openpin) == HIGH; i++)
       {
         opencurtins(15); // was 5680
       }
+      Serial.print("middle close");
+      Serial.println("count");
       opencurtins(15);
-      detectKnock();
-      detectKnock();
       thinkOpen = 1;
-  
-      //closecurtins(1000); // was 5690
-      // delay before next reading:
-      //delay(100);
+      detectKnock();
+      detectKnock();
     }
 
   delay(50);
