@@ -14,7 +14,7 @@ int x, y, z;
 int xp, yp, zp;
 int dx, dy, dz, dsensor;
 int knockfound; // this will have a 0 if nothing, and a 1 if we found a knock
-int threshold = 20; // how sensative the knock sensor is. lower is more sensative
+int threshold = 15; // how sensative the knock sensor is. lower is more sensative
 int bulbBoardThreshold = 100; // how sensative the light builb board.  normal swings are values 4-6 to 670-669 to XXX FIXME
 int sensorValue = 0;
 int lastsensorValue = 0;
@@ -100,7 +100,13 @@ void detectKnock()
   Serial.print("last sen value ");
   Serial.println(lastsensorValue);
 
-  if ( (abs(dsensor) > bulbBoardThreshold) || (abs(dx) > threshold) || (abs(dy) > threshold) || (abs(dz) > threshold) )
+  if
+  ( 
+    (abs(dsensor) > bulbBoardThreshold) && (sensorValue > 300) == thinkOpen || 
+    (abs(dx) > threshold) || 
+    (abs(dy) > threshold) || 
+    (abs(dz) > threshold) 
+  )
   {
     Serial.print("detect  ");
     Serial.print(dx);
