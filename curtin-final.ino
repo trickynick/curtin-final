@@ -14,7 +14,7 @@ int x, y, z;
 int xp, yp, zp;
 int dx, dy, dz;
 int knockfound; // this will have a 0 if nothing, and a 1 if we found a knock
-int threshold = 20; // how sensative the knock sensor is.
+int threshold = 20; // how sensative the knock sensor is. lower is more sensative
 int sensorValue = 0;
 int lastsensorValue = 0;
 
@@ -88,18 +88,19 @@ void detectKnock()
   if (sensorValue != lastsensorValue || abs(dx) > threshold || abs(dy) > threshold || abs(dz) > threshold )
   {
     Serial.print("detect  ");
+    Serial.print(dx);
+    Serial.print("\t"); // a tab between values
+    Serial.print(dy);
+    Serial.print("\t"); // a tab between values
+    Serial.print(dz);
+    Serial.println();
     knockfound = 1;
   }
   else
   {
     knockfound = 0;
   }
-  Serial.print(dx);
-  Serial.print("\t"); // a tab between values
-  Serial.print(dy);
-  Serial.print("\t"); // a tab between values
-  Serial.print(dz);
-  Serial.println();
+
   //  Serial.print(sensorPin);
   // move what was fresh into the previous, (discarding what was previous)
   // Note: dont do math after these 3 lines
@@ -121,7 +122,7 @@ void loop()
 {
   sensorValue = analogRead(sensorPin);
 
-  float voltage = sensorValue * (3.3 / 1023.0);
+  //float voltage = sensorValue * (3.3 / 1023.0);
 
 
 
@@ -129,13 +130,18 @@ void loop()
   // "this is looking for the value"
   detectKnock();
 
+  // LOW is closed
+
   // "knockfound actually makes it do something"
-  if (digitalRead (closepin) == LOW && knockfound)
+  if (digitalRead(closepin) == LOW && knockfound)
   {
+    Serial.println("closepin is closed and knockfound");
     while (digitalRead(openpin) == HIGH)
     {
       opencurtins(15); // was 5680
+      Serial.print("o");
     }
+    Serial.println("pened");
 
     // at this poing we always know there will be another detection
     // burn value
@@ -144,37 +150,41 @@ void loop()
     detectKnock();
     detectKnock();
   }
+
+  
   // delay(200);
   if (digitalRead (openpin) == LOW && knockfound)
   {
+    Serial.println("openpin is touching and knockfound");
     while (digitalRead(closepin) == HIGH)
     {
       closecurtins(15); // was 5680
+      Serial.print("c");
     }
-
-
+    Serial.println("losed");
+  detectKnock();
+  detectKnock();
+  detectKnock();
+  detectKnock();
   }
   //while (closepin == HIGH);
   // at this poing we always know there will be another detection
   // burn value
-  detectKnock();
-  detectKnock();
-  detectKnock();
-  detectKnock();
+  
 
-  if (digitalRead(openpin) == HIGH && digitalRead(closepin) == HIGH && knockfound)
-  {
-    while (digitalRead(closepin) == HIGH)
-    {
-      closecurtins(15); // was 5680
-    }
-    detectKnock();
-    detectKnock();
-
-    //closecurtins(1000); // was 5690
-    // delay before next reading:
-    //delay(100);
-  }
+//  if (digitalRead(openpin) == HIGH && digitalRead(closepin) == HIGH && knockfound)
+//  {
+//    while (digitalRead(closepin) == HIGH)
+//    {
+//      closecurtins(15); // was 5680
+//    }
+//    detectKnock();
+//    detectKnock();
+//
+//    //closecurtins(1000); // was 5690
+//    // delay before next reading:
+//    //delay(100);
+//  }
 
 }
 
