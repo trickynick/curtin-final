@@ -18,6 +18,7 @@ int threshold = 20; // how sensative the knock sensor is. lower is more sensativ
 int bulbBoardThreshold = 100; // how sensative the light builb board.  normal swings are values 4-6 to 670-669 to XXX FIXME
 int sensorValue = 0;
 int lastsensorValue = 0;
+bool thinkOpen = 0;
 
 void setup()
 {
@@ -34,6 +35,15 @@ void setup()
   // run twice to burn initial knock detect, should prevent running at programming
   detectKnock();
   detectKnock();
+
+  if(digitalRead(closepin) == LOW)
+  {
+    thinkOpen = 1;
+  }
+  if(digitalRead(openpin) == LOW)
+  {
+    thinkOpen = 0;
+  }
 }
 
 void opencurtins(int count)
@@ -131,7 +141,8 @@ void loop()
   sensorValue = analogRead(sensorPin);
 
   //float voltage = sensorValue * (3.3 / 1023.0);
-
+  Serial.print("think open: ");
+  Serial.println(thinkOpen?"TRUE":"FALSE");
 
 
   // jump and run this code.  this function will set the variable knockfound;
@@ -156,10 +167,11 @@ void loop()
     while (digitalRead(openpin) == HIGH)
     {
       opencurtins(15); // was 5680
-      Serial.print("o");
+      Serial.print("c");
     }
     opencurtins(15);
-    Serial.println("ooooooooooopened");
+    Serial.println("ccccclosed");
+    thinkOpen = 0;
 
     // at this poing we always know there will be another detection
     // burn value
@@ -175,11 +187,11 @@ void loop()
     while (digitalRead(closepin) == HIGH)
     {
       closecurtins(15); // was 5680
-      Serial.print("c");
+      Serial.print("o");
     }
     closecurtins(15);
-
-    Serial.println("ccccccccccclosed");
+    thinkOpen = 1;
+    Serial.println("ooooooopened");
     detectKnock();
     detectKnock();
   }
@@ -197,6 +209,7 @@ void loop()
       closecurtins(15);
       detectKnock();
       detectKnock();
+      thinkOpen = 1;
   
       //closecurtins(1000); // was 5690
       // delay before next reading:
