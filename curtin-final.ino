@@ -35,7 +35,7 @@ void setup()
   detectKnock();
 }
 
-void opencurtins (int count)
+void opencurtins(int count)
 {
   digitalWrite(curtinopenpin, HIGH);
   int i = 0;
@@ -51,7 +51,7 @@ void opencurtins (int count)
   }
 }
 
-void closecurtins (int count)
+void closecurtins(int count)
 { 
   digitalWrite(curtinclosepin, HIGH);
   int i = 0;
@@ -71,7 +71,7 @@ void closecurtins (int count)
 // int dx,dy,dz;
 
 // int threshold = 10;
-void detectKnock ()
+void detectKnock()
 {
   // pull fresh sensor values
   x = analogRead(xpin);
