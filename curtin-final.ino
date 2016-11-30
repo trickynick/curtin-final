@@ -158,6 +158,7 @@ void loop()
       opencurtins(15); // was 5680
       Serial.print("o");
     }
+    opencurtins(15);
     Serial.println("ooooooooooopened");
 
     // at this poing we always know there will be another detection
@@ -178,6 +179,8 @@ void loop()
       closecurtins(15); // was 5680
       Serial.print("c");
     }
+    closecurtins(15);
+
     Serial.println("ccccccccccclosed");
     detectKnock();
     detectKnock();
@@ -189,19 +192,20 @@ void loop()
   // burn value
 
 
-  //  if (digitalRead(openpin) == HIGH && digitalRead(closepin) == HIGH && knockfound)
-  //  {
-  //    while (digitalRead(closepin) == HIGH)
-  //    {
-  //      closecurtins(15); // was 5680
-  //    }
-  //    detectKnock();
-  //    detectKnock();
-  //
-  //    //closecurtins(1000); // was 5690
-  //    // delay before next reading:
-  //    //delay(100);
-  //  }
+    if (digitalRead(openpin) == HIGH && digitalRead(closepin) == HIGH && knockfound)
+    {
+      while (digitalRead(closepin) == HIGH)
+      {
+        closecurtins(15); // was 5680
+      }
+      closecurtins(15);
+      detectKnock();
+      detectKnock();
+  
+      //closecurtins(1000); // was 5690
+      // delay before next reading:
+      //delay(100);
+    }
 
   delay(50);
   //  detectKnock();
