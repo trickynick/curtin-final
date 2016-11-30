@@ -14,7 +14,7 @@ int x,y,z;
 int xp,yp,zp;
 int dx,dy,dz;
 int knockfound; // this will have a 0 if nothing, and a 1 if we found a knock
-int threshold = 20;
+int threshold = 20; // how sensative the knock sensor is.
 int sensorValue = 0;
 int lastsensorValue = 0;
 
@@ -70,7 +70,8 @@ void closecurtins(int count)
 /// int xp,yp,zp;
 // int dx,dy,dz;
 
-// int threshold = 10;
+// This function does 3 analog reads on the knock sensor and calculates the difference
+// global variable knockfound is set when detected
 void detectKnock()
 {
   // pull fresh sensor values
@@ -93,15 +94,13 @@ void detectKnock()
   {
     knockfound = 0;
   }
-  //   Serial.print(dx);
-  //   Serial.print a tab between values;
-  //   Serial.print("\t");
-  //   Serial.print(dy);
-  //   Serial.print a tab between values;
-  //   Serial.print("\t");
-  //   Serial.print(dz);
-  //   Serial.println();
-  Serial.print(sensorPin);
+     Serial.print(dx);
+     Serial.print("\t"); // a tab between values
+     Serial.print(dy);
+     Serial.print("\t"); // a tab between values
+     Serial.print(dz);
+     Serial.println();
+//  Serial.print(sensorPin);
   // move what was fresh into the previous, (discarding what was previous)
   // Note: dont do math after these 3 lines
   xp = x;
@@ -124,7 +123,7 @@ void loop()
 
   float voltage= sensorValue * (3.3 / 1023.0);
 
-  {
+  
 
     // jump and run this code.  this function will set the variable knockfound;
     // "this is looking for the value"
@@ -176,7 +175,7 @@ void loop()
       // delay before next reading:
       //delay(100);
     }
-  }
+  
 }
 
 
